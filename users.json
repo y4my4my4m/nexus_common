@@ -1,8 +1,8 @@
 [
   {
-    "id": "bb63b559-b6d7-43d5-b92f-fa03372879fc",
+    "id": "c4fc6ecf-84ff-4d2a-bc40-2c0d7f648659",
     "username": "y4my4m",
-    "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$Q1FxhifGYBYra7xdlntMNA$R+qa1nB8pfh+8sH2FjSjjOrENggDfaWWisHRXzkiaf4",
+    "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$No6zeObCch05aJTcJ2WMEQ$pMIC0j7tWR4fdYHXAGhlYXeusQSPdRlhlkdeEcHUwEI",
     "color": "Green",
     "role": "Admin"
   }
