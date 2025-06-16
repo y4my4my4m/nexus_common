@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Decompiling Corporate ICE",
+    "description": "Tips and tricks for getting past the big boys' security.",
+    "threads": [
+      {
+        "title": "Militech's 'Aegis' Firewall - Any exploits?",
+        "author": "jack_h.k",
+        "posts": [
+          {
+            "author": "jack_h.k",
+            "content": "I've been probing their new Aegis system. It's tough. The outer layer seems to use quantum entanglement for key generation. Standard brute-forcing is useless."
+          },
+          {
+            "author": "DataWitch",
+            "content": "Heard that. You need to look for social engineering vectors. The human element is always the weakest link. Check their janitorial staff's public data."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Black Market Bazaar",
+    "description": "Trade gear, software, and information. No feds.",
+    "threads": [
+      {
+        "title": "[WTS] Kiroshi Optics (Gen 3)",
+        "author": "fixer_x",
+        "posts": [
+          {
+            "author": "fixer_x",
+            "content": "Got a fresh pair, clean serial. 5000 eddies. No lowballers, I know what I have."
+          }
+        ]
+      }
+    ]
+  }
+]
