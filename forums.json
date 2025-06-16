@@ -1,35 +1,28 @@
 [
   {
+    "id": "5fa5f555-3161-4688-95d8-95b10d533325",
     "name": "Decompiling Corporate ICE",
     "description": "Tips and tricks for getting past the big boys' security.",
     "threads": [
       {
+        "id": "fdfc96a5-f9db-41d9-b0cf-0b93c8ab899e",
         "title": "Militech's 'Aegis' Firewall - Any exploits?",
-        "author": "jack_h.k",
+        "author": {
+          "id": "f009ea50-58b2-4511-9063-d5b6a8c96f35",
+          "username": "system",
+          "color": "Red",
+          "role": "Admin"
+        },
         "posts": [
           {
-            "author": "jack_h.k",
-            "content": "I've been probing their new Aegis system. It's tough. The outer layer seems to use quantum entanglement for key generation. Standard brute-forcing is useless."
-          },
-          {
-            "author": "DataWitch",
-            "content": "Heard that. You need to look for social engineering vectors. The human element is always the weakest link. Check their janitorial staff's public data."
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "name": "Black Market Bazaar",
-    "description": "Trade gear, software, and information. No feds.",
-    "threads": [
-      {
-        "title": "[WTS] Kiroshi Optics (Gen 3)",
-        "author": "fixer_x",
-        "posts": [
-          {
-            "author": "fixer_x",
-            "content": "Got a fresh pair, clean serial. 5000 eddies. No lowballers, I know what I have."
+            "id": "15625573-cf06-47d6-ae37-0a355773c77e",
+            "author": {
+              "id": "f009ea50-58b2-4511-9063-d5b6a8c96f35",
+              "username": "system",
+              "color": "Red",
+              "role": "Admin"
+            },
+            "content": "I've been probing their new Aegis system. It's tough."
           }
         ]
       }

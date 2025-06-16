@@ -1,65 +1,14 @@
+// common/src/lib.rs
+
 use ratatui::style::Color;
 use serde::{Deserialize, Serialize};
-
-// --- Data Structures (serializable) ---
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Forum {
-    pub name: String,
-    pub description: String,
-    pub threads: Vec<Thread>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Thread {
-    pub title: String,
-    pub author: String,
-    pub posts: Vec<Post>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Post {
-    pub author: String,
-    pub content: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct ChatMessage {
-    pub author: String,
-    pub content: String,
-    #[serde(with = "ColorDef")]
-    pub color: Color,
-}
-
-// --- Network Protocol Definitions ---
-
-#[derive(Serialize, Deserialize, Debug)]
-pub enum ClientMessage {
-    SetUsername(String),
-    GetForums,
-    AddThread {
-        forum_idx: usize,
-        thread: Thread,
-    },
-    AddPost {
-        forum_idx: usize,
-        thread_idx: usize,
-        post: Post,
-    },
-    SendChatMessage(String),
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub enum ServerMessage {
-    Forums(Vec<Forum>),
-    NewChatMessage(ChatMessage),
-}
+use uuid::Uuid;
 
 // --- Serde helper for ratatui::Color ---
-// This is needed because Color doesn't implement Serialize/Deserialize by default
+// *** FIX 1: MOVE THIS TO THE TOP LEVEL ***
 #[derive(Serialize, Deserialize)]
 #[serde(remote = "Color")]
-enum ColorDef {
+pub enum ColorDef {
     Reset,
     Black,
     Red,
@@ -81,34 +30,131 @@ enum ColorDef {
     Indexed(u8),
 }
 
-// --- Mock Data Creation (for server's first run) ---
+// *** FIX 2: CREATE A WRAPPER FOR DIRECT SERIALIZATION ***
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+pub struct SerializableColor(#[serde(with = "ColorDef")] pub Color);
+
+
+// --- User & Role Management ---
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub enum UserRole {
+    User,
+    Moderator,
+    Admin,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct User {
+    pub id: Uuid,
+    pub username: String,
+    #[serde(with = "ColorDef")]
+    pub color: Color,
+    pub role: UserRole,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct UserProfile {
+    pub id: Uuid,
+    pub username: String,
+    #[serde(rename = "password_hash")]
+    pub hash: String,
+    #[serde(with = "ColorDef")]
+    pub color: Color,
+    pub role: UserRole,
+}
+
+// --- Data Structures ---
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Forum {
+    pub id: Uuid,
+    pub name: String,
+    pub description: String,
+    pub threads: Vec<Thread>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Thread {
+    pub id: Uuid,
+    pub title: String,
+    pub author: User,
+    pub posts: Vec<Post>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Post {
+    pub id: Uuid,
+    pub author: User,
+    pub content: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ChatMessage {
+    pub author: String,
+    pub content: String,
+    #[serde(with = "ColorDef")]
+    pub color: Color,
+}
+
+// --- Network Protocol Definitions ---
+
+#[derive(Serialize, Deserialize, Debug)]
+pub enum ClientMessage {
+    // Auth
+    Register { username: String, password: String },
+    Login { username: String, password: String },
+    Logout,
+    // User
+    UpdatePassword(String),
+    // *** FIX 2: USE THE WRAPPER STRUCT HERE ***
+    UpdateColor(SerializableColor),
+    // Forums
+    GetForums,
+    CreateThread { forum_id: Uuid, title: String, content: String },
+    CreatePost { thread_id: Uuid, content: String },
+    // Chat
+    SendChatMessage(String),
+    // Moderation
+    DeletePost(Uuid),
+    DeleteThread(Uuid),
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum ServerMessage {
+    // Auth
+    AuthSuccess(User),
+    AuthFailure(String),
+    // General
+    Forums(Vec<Forum>),
+    NewChatMessage(ChatMessage),
+    Notification(String, bool), // Message, is_error
+}
+
+
+// Initial data creation
 pub fn create_initial_forums() -> Vec<Forum> {
+    let system_user = User {
+        id: Uuid::new_v4(),
+        username: "system".to_string(),
+        color: Color::Red,
+        role: UserRole::Admin,
+    };
     vec![
-        // ... (same as before, just using the new serializable structs)
         Forum {
+            id: Uuid::new_v4(),
             name: "Decompiling Corporate ICE".to_string(),
             description: "Tips and tricks for getting past the big boys' security.".to_string(),
             threads: vec![
                 Thread {
+                    id: Uuid::new_v4(),
                     title: "Militech's 'Aegis' Firewall - Any exploits?".to_string(),
-                    author: "jack_h.k".to_string(),
-                    posts: vec![
-                        Post { author: "jack_h.k".to_string(), content: "I've been probing their new Aegis system. It's tough. The outer layer seems to use quantum entanglement for key generation. Standard brute-forcing is useless.".to_string() },
-                        Post { author: "DataWitch".to_string(), content: "Heard that. You need to look for social engineering vectors. The human element is always the weakest link. Check their janitorial staff's public data.".to_string() },
-                    ],
-                },
-            ],
-        },
-        Forum {
-            name: "Black Market Bazaar".to_string(),
-            description: "Trade gear, software, and information. No feds.".to_string(),
-            threads: vec![
-                Thread {
-                    title: "[WTS] Kiroshi Optics (Gen 3)".to_string(),
-                    author: "fixer_x".to_string(),
-                    posts: vec![
-                        Post { author: "fixer_x".to_string(), content: "Got a fresh pair, clean serial. 5000 eddies. No lowballers, I know what I have.".to_string() },
-                    ],
+                    author: system_user.clone(),
+                    posts: vec![ Post {
+                        id: Uuid::new_v4(),
+                        author: system_user.clone(),
+                        content: "I've been probing their new Aegis system. It's tough.".to_string(),
+                    }],
                 },
             ],
         },

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "bb63b559-b6d7-43d5-b92f-fa03372879fc",
+    "username": "y4my4m",
+    "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$Q1FxhifGYBYra7xdlntMNA$R+qa1nB8pfh+8sH2FjSjjOrENggDfaWWisHRXzkiaf4",
+    "color": "Green",
+    "role": "Admin"
+  }
+]
