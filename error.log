@@ -1,0 +1,102 @@
+   Compiling client v0.1.0 (/home/y4my4m/gits/ai/cyberpunk_bbs/client)
+error[E0599]: no associated item named `Small` found for tuple `(u16, u16)` in the current scope
+   --> client/src/app.rs:107:45
+    |
+107 |             Picker::from_fontsize(FontSize::Small)
+    |                                             ^^^^^ associated item not found in `(u16, u16)`
+
+warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
+  --> client/src/ui.rs:14:18
+   |
+14 |     let size = f.size();
+   |                  ^^^^
+   |
+   = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+   --> client/src/ui.rs:143:11
+    |
+143 |         f.set_cursor(chunks[0].x + app.current_input.len() as u16 + 1, chunks[0].y + 1);
+    |           ^^^^^^^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+   --> client/src/ui.rs:145:11
+    |
+145 |         f.set_cursor(chunks[1].x + app.password_input.len() as u16 + 1, chunks[1].y + 1);
+    |           ^^^^^^^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+   --> client/src/ui.rs:187:11
+    |
+187 |         f.set_cursor(chunks[0].x + app.current_input.len() as u16 + 1, chunks[0].y + 1);
+    |           ^^^^^^^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+   --> client/src/ui.rs:189:11
+    |
+189 |         f.set_cursor(chunks[1].x + app.password_input.len() as u16 + 1, chunks[1].y + 1);
+    |           ^^^^^^^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+   --> client/src/ui.rs:393:11
+    |
+393 |         f.set_cursor(cursor.0, cursor.1);
+    |           ^^^^^^^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+   --> client/src/ui.rs:433:7
+    |
+433 |     f.set_cursor(chunks[1].x + app.current_input.len() as u16 + 1, chunks[1].y + 1);
+    |       ^^^^^^^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
+   --> client/src/ui.rs:465:37
+    |
+465 |     let area = draw_centered_rect(f.size(), 50, 20);
+    |                                     ^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+   --> client/src/ui.rs:470:7
+    |
+470 |     f.set_cursor(area.x + app.dm_input.len() as u16 + 1, area.y + 1);
+    |       ^^^^^^^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
+   --> client/src/ui.rs:481:37
+    |
+481 |     let area = draw_centered_rect(f.size(), 60, 25);
+    |                                     ^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+   --> client/src/ui.rs:489:7
+    |
+489 |     f.set_cursor(area.x + app.current_input.len() as u16 + 1, area.y + 1);
+    |       ^^^^^^^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
+   --> client/src/ui.rs:493:37
+    |
+493 |     let area = draw_centered_rect(f.size(), 50, 20);
+    |                                     ^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
+   --> client/src/ui.rs:510:18
+    |
+510 |     let size = f.size();
+    |                  ^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
+   --> client/src/ui.rs:523:37
+    |
+523 |     let area = draw_centered_rect(f.size(), 70, 60);
+    |                                     ^^^^
+
+warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
+   --> client/src/ui.rs:598:37
+    |
+598 |     let area = draw_centered_rect(f.size(), 40, 20);
+    |                                     ^^^^
+
+For more information about this error, try `rustc --explain E0599`.
+warning: `client` (bin "client") generated 15 warnings
+error: could not compile `client` (bin "client") due to 1 previous error; 15 warnings emitted
