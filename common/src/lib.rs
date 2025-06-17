@@ -51,6 +51,8 @@ pub struct User {
     #[serde(with = "ColorDef")]
     pub color: Color,
     pub role: UserRole,
+    pub profile_pic: Option<String>,
+    pub cover_banner: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -167,6 +169,8 @@ pub fn create_initial_forums() -> Vec<Forum> {
         username: "system".to_string(),
         color: Color::Red,
         role: UserRole::Admin,
+        profile_pic: Some("system.png".to_string()),
+        cover_banner: Some("system_banner.png".to_string()),
     };
     vec![
         Forum {
