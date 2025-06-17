@@ -132,7 +132,7 @@ pub enum ClientMessage {
     CreatePost { thread_id: Uuid, content: String },
     // Chat
     SendChatMessage(String),
-    SendDirectMessage { to: Uuid, content: String }, // NEW: Direct message
+    SendDirectMessage { to: Uuid, content: String },
     // Moderation
     DeletePost(Uuid),
     DeleteThread(Uuid),
@@ -149,8 +149,8 @@ pub enum ServerMessage {
     // General
     Forums(Vec<Forum>),
     NewChatMessage(ChatMessage),
-    DirectMessage { from: User, content: String }, // NEW: Direct message
-    MentionNotification { from: User, content: String }, // NEW: Mention notification
+    DirectMessage { from: User, content: String },
+    MentionNotification { from: User, content: String },
     Notification(String, bool), // Message, is_error
     // User management
     UserList(Vec<User>), // List of connected users
