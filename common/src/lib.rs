@@ -159,6 +159,7 @@ pub enum ServerMessage {
     UserJoined(User),    // A user joined
     UserLeft(Uuid),      // A user left (by id)
     Profile(UserProfile),
+    UserUpdated(User), // Broadcast when a user updates their profile
 }
 
 
