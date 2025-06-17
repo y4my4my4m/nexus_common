@@ -62,6 +62,14 @@ pub struct UserProfile {
     #[serde(with = "ColorDef")]
     pub color: Color,
     pub role: UserRole,
+    // Profile fields
+    pub bio: Option<String>,
+    pub url1: Option<String>,
+    pub url2: Option<String>,
+    pub url3: Option<String>,
+    pub location: Option<String>,
+    pub profile_pic: Option<String>,
+    pub cover_banner: Option<String>,
 }
 
 // --- Data Structures ---
@@ -109,6 +117,15 @@ pub enum ClientMessage {
     UpdatePassword(String),
     // *** FIX 2: USE THE WRAPPER STRUCT HERE ***
     UpdateColor(SerializableColor),
+    UpdateProfile {
+        bio: Option<String>,
+        url1: Option<String>,
+        url2: Option<String>,
+        url3: Option<String>,
+        location: Option<String>,
+        profile_pic: Option<String>,
+        cover_banner: Option<String>,
+    },
     // Forums
     GetForums,
     CreateThread { forum_id: Uuid, title: String, content: String },
@@ -121,6 +138,7 @@ pub enum ClientMessage {
     DeleteThread(Uuid),
     // User management
     GetUserList, // Request the list of connected users
+    GetProfile { user_id: Uuid },
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -138,6 +156,7 @@ pub enum ServerMessage {
     UserList(Vec<User>), // List of connected users
     UserJoined(User),    // A user joined
     UserLeft(Uuid),      // A user left (by id)
+    Profile(UserProfile),
 }
 
 
