@@ -401,6 +401,7 @@ dependencies = [
  "rand",
  "ratatui",
  "ratatui-image",
+ "regex",
  "rodio",
  "tokio",
  "tokio-util",
