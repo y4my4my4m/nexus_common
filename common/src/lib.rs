@@ -118,6 +118,8 @@ pub enum ClientMessage {
     // Moderation
     DeletePost(Uuid),
     DeleteThread(Uuid),
+    // User management
+    GetUserList, // Request the list of connected users
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -129,6 +131,10 @@ pub enum ServerMessage {
     Forums(Vec<Forum>),
     NewChatMessage(ChatMessage),
     Notification(String, bool), // Message, is_error
+    // User management
+    UserList(Vec<User>), // List of connected users
+    UserJoined(User),    // A user joined
+    UserLeft(Uuid),      // A user left (by id)
 }
 
 
