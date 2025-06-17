@@ -146,6 +146,11 @@ pub struct ChannelMessage {
     pub sent_by: Uuid,
     pub timestamp: i64,
     pub content: String,
+    // --- Added fields for author info ---
+    pub author_username: String,
+    #[serde(with = "ColorDef")]
+    pub author_color: Color,
+    pub author_profile_pic: Option<String>, // base64 or URL
 }
 
 // --- Network Protocol Definitions ---
