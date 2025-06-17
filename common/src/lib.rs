@@ -107,6 +107,47 @@ pub struct ChatMessage {
     pub color: Color,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Server {
+    pub id: Uuid,
+    pub name: String,
+    pub description: String,
+    pub public: bool,
+    pub invite_code: Option<String>,
+    pub icon: Option<String>, // base64
+    pub banner: Option<String>, // base64
+    pub owner: Uuid,
+    pub mods: Vec<Uuid>,
+    pub userlist: Vec<Uuid>,
+    pub channels: Vec<Channel>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Channel {
+    pub id: Uuid,
+    pub server_id: Uuid,
+    pub name: String,
+    pub description: String,
+    pub permissions: ChannelPermissions,
+    pub userlist: Vec<Uuid>,
+    pub messages: Vec<ChannelMessage>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ChannelPermissions {
+    pub can_read: Vec<Uuid>,
+    pub can_write: Vec<Uuid>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ChannelMessage {
+    pub id: Uuid,
+    pub channel_id: Uuid,
+    pub sent_by: Uuid,
+    pub timestamp: i64,
+    pub content: String,
+}
+
 // --- Network Protocol Definitions ---
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -135,12 +176,14 @@ pub enum ClientMessage {
     // Chat
     SendChatMessage(String),
     SendDirectMessage { to: Uuid, content: String },
+    SendChannelMessage { channel_id: Uuid, content: String },
     // Moderation
     DeletePost(Uuid),
     DeleteThread(Uuid),
     // User management
     GetUserList, // Request the list of connected users
     GetProfile { user_id: Uuid },
+    GetServers, // Request all servers the user is a member of
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -160,6 +203,7 @@ pub enum ServerMessage {
     UserLeft(Uuid),      // A user left (by id)
     Profile(UserProfile),
     UserUpdated(User), // Broadcast when a user updates their profile
+    Servers(Vec<Server>), // List of servers and their channels
 }
 
 

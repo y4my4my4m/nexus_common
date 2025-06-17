@@ -1,0 +1,45 @@
+   Compiling client v0.1.0 (/home/y4my4m/gits/ai/cyberpunk_bbs/client)
+error[E0433]: failed to resolve: use of unresolved module or unlinked crate `chrono`
+   --> client/src/app.rs:286:44
+    |
+286 | ...                   timestamp: chrono::Utc::now().timestamp(),
+    |                                  ^^^^^^ use of unresolved module or unlinked crate `chrono`
+    |
+    = help: if you wanted to use a crate named `chrono`, use `cargo add chrono` to add it to your `Cargo.toml`
+
+error[E0433]: failed to resolve: use of undeclared type `ListState`
+  --> client/src/ui/chat.rs:69:26
+   |
+69 |     let mut list_state = ListState::default();
+   |                          ^^^^^^^^^ use of undeclared type `ListState`
+   |
+help: consider importing this struct
+   |
+3  + use ratatui::widgets::ListState;
+   |
+
+error[E0599]: no variant or associated item named `Sidebar` found for enum `ChatFocus` in the current scope
+   --> client/src/handler.rs:471:40
+    |
+471 |                 crate::app::ChatFocus::Sidebar => match key.code {
+    |                                        ^^^^^^^ variant or associated item not found in `ChatFocus`
+    |
+   ::: client/src/app.rs:36:1
+    |
+36  | pub enum ChatFocus {
+    | ------------------ variant or associated item `Sidebar` not found for this enum
+
+error[E0599]: no variant or associated item named `Sidebar` found for enum `ChatFocus` in the current scope
+  --> client/src/ui/chat.rs:31:57
+   |
+31 |     draw_sidebar(f, app, chunks[0], focus == ChatFocus::Sidebar);
+   |                                                         ^^^^^^^ variant or associated item not found in `ChatFocus`
+   |
+  ::: client/src/app.rs:36:1
+   |
+36 | pub enum ChatFocus {
+   | ------------------ variant or associated item `Sidebar` not found for this enum
+
+Some errors have detailed explanations: E0433, E0599.
+For more information about an error, try `rustc --explain E0433`.
+error: could not compile `client` (bin "client") due to 4 previous errors
