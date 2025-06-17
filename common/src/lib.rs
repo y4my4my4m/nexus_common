@@ -184,6 +184,8 @@ pub enum ClientMessage {
     GetUserList, // Request the list of connected users
     GetProfile { user_id: Uuid },
     GetServers, // Request all servers the user is a member of
+    // --- CHANNEL MESSAGE FETCH ---
+    GetChannelMessages { channel_id: Uuid },
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -204,7 +206,9 @@ pub enum ServerMessage {
     Profile(UserProfile),
     UserUpdated(User), // Broadcast when a user updates their profile
     Servers(Vec<Server>), // List of servers and their channels
-    NewChannelMessage(ChannelMessage), // <-- Add this variant
+    NewChannelMessage(ChannelMessage),
+    // --- CHANNEL MESSAGE FETCH ---
+    ChannelMessages { channel_id: Uuid, messages: Vec<ChannelMessage> },
 }
 
 
