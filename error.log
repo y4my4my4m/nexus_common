@@ -1,65 +1,241 @@
    Compiling client v0.1.0 (/home/y4my4m/gits/ai/cyberpunk_bbs/client)
-error[E0599]: no associated item named `Small` found for tuple `(u16, u16)` in the current scope
-   --> client/src/app.rs:107:45
+warning: unused import: `FontSize`
+  --> client/src/app.rs:13:65
+   |
+13 | use ratatui_image::{picker::Picker, protocol::StatefulProtocol, FontSize};
+   |                                                                 ^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` on by default
+
+warning: unused import: `image::load_from_memory`
+  --> client/src/app.rs:14:5
+   |
+14 | use image::load_from_memory;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `GenericImageView` and `RgbaImage`
+   --> client/src/app.rs:416:49
     |
-107 |             Picker::from_fontsize(FontSize::Small)
-    |                                             ^^^^^ associated item not found in `(u16, u16)`
+416 |         use image::{DynamicImage, GenericImage, GenericImageView, ImageFormat, Rgba, RgbaImage, imageops};
+    |                                                 ^^^^^^^^^^^^^^^^                     ^^^^^^^^^
 
-warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
-  --> client/src/ui.rs:14:18
-   |
-14 |     let size = f.size();
-   |                  ^^^^
-   |
-   = note: `#[warn(deprecated)]` on by default
+error[E0277]: the trait bound `ratatui::layout::Position: From<u16>` is not satisfied
+   --> client/src/ui.rs:143:31
+    |
+143 |         f.set_cursor_position(chunks[0].x + app.current_input.len() as u16 + 1, chunks[0].y + 1);
+    |           ------------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `From<u16>` is not implemented for `ratatui::layout::Position`
+    |           |
+    |           required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `From<T>`:
+              `ratatui::layout::Position` implements `From<(u16, u16)>`
+              `ratatui::layout::Position` implements `From<ratatui::layout::Rect>`
+    = note: required for `u16` to implement `Into<ratatui::layout::Position>`
+note: required by a bound in `ratatui::Frame::<'_>::set_cursor_position`
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:35
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |                                   ^^^^^^^^^^^^^^ required by this bound in `Frame::<'_>::set_cursor_position`
 
-warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+error[E0061]: this method takes 1 argument but 2 arguments were supplied
    --> client/src/ui.rs:143:11
     |
-143 |         f.set_cursor(chunks[0].x + app.current_input.len() as u16 + 1, chunks[0].y + 1);
-    |           ^^^^^^^^^^
+143 |         f.set_cursor_position(chunks[0].x + app.current_input.len() as u16 + 1, chunks[0].y + 1);
+    |           ^^^^^^^^^^^^^^^^^^^                                                   --------------- unexpected argument #2 of type `u16`
+    |
+note: method defined here
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:12
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |            ^^^^^^^^^^^^^^^^^^^
+help: remove the extra argument
+    |
+143 -         f.set_cursor_position(chunks[0].x + app.current_input.len() as u16 + 1, chunks[0].y + 1);
+143 +         f.set_cursor_position(chunks[0].x + app.current_input.len() as u16 + 1);
+    |
 
-warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+error[E0277]: the trait bound `ratatui::layout::Position: From<u16>` is not satisfied
+   --> client/src/ui.rs:145:31
+    |
+145 |         f.set_cursor_position(chunks[1].x + app.password_input.len() as u16 + 1, chunks[1].y + 1);
+    |           ------------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `From<u16>` is not implemented for `ratatui::layout::Position`
+    |           |
+    |           required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `From<T>`:
+              `ratatui::layout::Position` implements `From<(u16, u16)>`
+              `ratatui::layout::Position` implements `From<ratatui::layout::Rect>`
+    = note: required for `u16` to implement `Into<ratatui::layout::Position>`
+note: required by a bound in `ratatui::Frame::<'_>::set_cursor_position`
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:35
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |                                   ^^^^^^^^^^^^^^ required by this bound in `Frame::<'_>::set_cursor_position`
+
+error[E0061]: this method takes 1 argument but 2 arguments were supplied
    --> client/src/ui.rs:145:11
     |
-145 |         f.set_cursor(chunks[1].x + app.password_input.len() as u16 + 1, chunks[1].y + 1);
-    |           ^^^^^^^^^^
+145 |         f.set_cursor_position(chunks[1].x + app.password_input.len() as u16 + 1, chunks[1].y + 1);
+    |           ^^^^^^^^^^^^^^^^^^^                                                    --------------- unexpected argument #2 of type `u16`
+    |
+note: method defined here
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:12
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |            ^^^^^^^^^^^^^^^^^^^
+help: remove the extra argument
+    |
+145 -         f.set_cursor_position(chunks[1].x + app.password_input.len() as u16 + 1, chunks[1].y + 1);
+145 +         f.set_cursor_position(chunks[1].x + app.password_input.len() as u16 + 1);
+    |
 
-warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+error[E0277]: the trait bound `ratatui::layout::Position: From<u16>` is not satisfied
+   --> client/src/ui.rs:187:31
+    |
+187 |         f.set_cursor_position(chunks[0].x + app.current_input.len() as u16 + 1, chunks[0].y + 1);
+    |           ------------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `From<u16>` is not implemented for `ratatui::layout::Position`
+    |           |
+    |           required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `From<T>`:
+              `ratatui::layout::Position` implements `From<(u16, u16)>`
+              `ratatui::layout::Position` implements `From<ratatui::layout::Rect>`
+    = note: required for `u16` to implement `Into<ratatui::layout::Position>`
+note: required by a bound in `ratatui::Frame::<'_>::set_cursor_position`
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:35
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |                                   ^^^^^^^^^^^^^^ required by this bound in `Frame::<'_>::set_cursor_position`
+
+error[E0061]: this method takes 1 argument but 2 arguments were supplied
    --> client/src/ui.rs:187:11
     |
-187 |         f.set_cursor(chunks[0].x + app.current_input.len() as u16 + 1, chunks[0].y + 1);
-    |           ^^^^^^^^^^
+187 |         f.set_cursor_position(chunks[0].x + app.current_input.len() as u16 + 1, chunks[0].y + 1);
+    |           ^^^^^^^^^^^^^^^^^^^                                                   --------------- unexpected argument #2 of type `u16`
+    |
+note: method defined here
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:12
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |            ^^^^^^^^^^^^^^^^^^^
+help: remove the extra argument
+    |
+187 -         f.set_cursor_position(chunks[0].x + app.current_input.len() as u16 + 1, chunks[0].y + 1);
+187 +         f.set_cursor_position(chunks[0].x + app.current_input.len() as u16 + 1);
+    |
 
-warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+error[E0277]: the trait bound `ratatui::layout::Position: From<u16>` is not satisfied
+   --> client/src/ui.rs:189:31
+    |
+189 |         f.set_cursor_position(chunks[1].x + app.password_input.len() as u16 + 1, chunks[1].y + 1);
+    |           ------------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `From<u16>` is not implemented for `ratatui::layout::Position`
+    |           |
+    |           required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `From<T>`:
+              `ratatui::layout::Position` implements `From<(u16, u16)>`
+              `ratatui::layout::Position` implements `From<ratatui::layout::Rect>`
+    = note: required for `u16` to implement `Into<ratatui::layout::Position>`
+note: required by a bound in `ratatui::Frame::<'_>::set_cursor_position`
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:35
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |                                   ^^^^^^^^^^^^^^ required by this bound in `Frame::<'_>::set_cursor_position`
+
+error[E0061]: this method takes 1 argument but 2 arguments were supplied
    --> client/src/ui.rs:189:11
     |
-189 |         f.set_cursor(chunks[1].x + app.password_input.len() as u16 + 1, chunks[1].y + 1);
-    |           ^^^^^^^^^^
+189 |         f.set_cursor_position(chunks[1].x + app.password_input.len() as u16 + 1, chunks[1].y + 1);
+    |           ^^^^^^^^^^^^^^^^^^^                                                    --------------- unexpected argument #2 of type `u16`
+    |
+note: method defined here
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:12
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |            ^^^^^^^^^^^^^^^^^^^
+help: remove the extra argument
+    |
+189 -         f.set_cursor_position(chunks[1].x + app.password_input.len() as u16 + 1, chunks[1].y + 1);
+189 +         f.set_cursor_position(chunks[1].x + app.password_input.len() as u16 + 1);
+    |
 
-warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+error[E0277]: the trait bound `ratatui::layout::Position: From<u16>` is not satisfied
+   --> client/src/ui.rs:393:31
+    |
+393 |         f.set_cursor_position(cursor.0, cursor.1);
+    |           ------------------- ^^^^^^^^ the trait `From<u16>` is not implemented for `ratatui::layout::Position`
+    |           |
+    |           required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `From<T>`:
+              `ratatui::layout::Position` implements `From<(u16, u16)>`
+              `ratatui::layout::Position` implements `From<ratatui::layout::Rect>`
+    = note: required for `u16` to implement `Into<ratatui::layout::Position>`
+note: required by a bound in `ratatui::Frame::<'_>::set_cursor_position`
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:35
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |                                   ^^^^^^^^^^^^^^ required by this bound in `Frame::<'_>::set_cursor_position`
+
+error[E0061]: this method takes 1 argument but 2 arguments were supplied
    --> client/src/ui.rs:393:11
     |
-393 |         f.set_cursor(cursor.0, cursor.1);
-    |           ^^^^^^^^^^
+393 |         f.set_cursor_position(cursor.0, cursor.1);
+    |           ^^^^^^^^^^^^^^^^^^^           -------- unexpected argument #2 of type `u16`
+    |
+note: method defined here
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:12
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |            ^^^^^^^^^^^^^^^^^^^
+help: remove the extra argument
+    |
+393 -         f.set_cursor_position(cursor.0, cursor.1);
+393 +         f.set_cursor_position(cursor.0);
+    |
 
 warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
    --> client/src/ui.rs:433:7
     |
 433 |     f.set_cursor(chunks[1].x + app.current_input.len() as u16 + 1, chunks[1].y + 1);
     |       ^^^^^^^^^^
-
-warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
-   --> client/src/ui.rs:465:37
     |
-465 |     let area = draw_centered_rect(f.size(), 50, 20);
-    |                                     ^^^^
+    = note: `#[warn(deprecated)]` on by default
 
-warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+error[E0277]: the trait bound `ratatui::layout::Position: From<u16>` is not satisfied
+   --> client/src/ui.rs:470:27
+    |
+470 |     f.set_cursor_position(area.x + app.dm_input.len() as u16 + 1, area.y + 1);
+    |       ------------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `From<u16>` is not implemented for `ratatui::layout::Position`
+    |       |
+    |       required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `From<T>`:
+              `ratatui::layout::Position` implements `From<(u16, u16)>`
+              `ratatui::layout::Position` implements `From<ratatui::layout::Rect>`
+    = note: required for `u16` to implement `Into<ratatui::layout::Position>`
+note: required by a bound in `ratatui::Frame::<'_>::set_cursor_position`
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:35
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |                                   ^^^^^^^^^^^^^^ required by this bound in `Frame::<'_>::set_cursor_position`
+
+error[E0061]: this method takes 1 argument but 2 arguments were supplied
    --> client/src/ui.rs:470:7
     |
-470 |     f.set_cursor(area.x + app.dm_input.len() as u16 + 1, area.y + 1);
-    |       ^^^^^^^^^^
+470 |     f.set_cursor_position(area.x + app.dm_input.len() as u16 + 1, area.y + 1);
+    |       ^^^^^^^^^^^^^^^^^^^                                         ---------- unexpected argument #2 of type `u16`
+    |
+note: method defined here
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:12
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |            ^^^^^^^^^^^^^^^^^^^
+help: remove the extra argument
+    |
+470 -     f.set_cursor_position(area.x + app.dm_input.len() as u16 + 1, area.y + 1);
+470 +     f.set_cursor_position(area.x + app.dm_input.len() as u16 + 1);
+    |
 
 warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
    --> client/src/ui.rs:481:37
@@ -67,36 +243,62 @@ warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as i
 481 |     let area = draw_centered_rect(f.size(), 60, 25);
     |                                     ^^^^
 
-warning: use of deprecated method `ratatui::Frame::<'_>::set_cursor`: the method set_cursor_position indicates more clearly what about the cursor to set
+error[E0277]: the trait bound `ratatui::layout::Position: From<u16>` is not satisfied
+   --> client/src/ui.rs:489:27
+    |
+489 |     f.set_cursor_position(area.x + app.current_input.len() as u16 + 1, area.y + 1);
+    |       ------------------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `From<u16>` is not implemented for `ratatui::layout::Position`
+    |       |
+    |       required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `From<T>`:
+              `ratatui::layout::Position` implements `From<(u16, u16)>`
+              `ratatui::layout::Position` implements `From<ratatui::layout::Rect>`
+    = note: required for `u16` to implement `Into<ratatui::layout::Position>`
+note: required by a bound in `ratatui::Frame::<'_>::set_cursor_position`
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:35
+    |
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |                                   ^^^^^^^^^^^^^^ required by this bound in `Frame::<'_>::set_cursor_position`
+
+error[E0061]: this method takes 1 argument but 2 arguments were supplied
    --> client/src/ui.rs:489:7
     |
-489 |     f.set_cursor(area.x + app.current_input.len() as u16 + 1, area.y + 1);
-    |       ^^^^^^^^^^
-
-warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
-   --> client/src/ui.rs:493:37
+489 |     f.set_cursor_position(area.x + app.current_input.len() as u16 + 1, area.y + 1);
+    |       ^^^^^^^^^^^^^^^^^^^                                              ---------- unexpected argument #2 of type `u16`
     |
-493 |     let area = draw_centered_rect(f.size(), 50, 20);
-    |                                     ^^^^
-
-warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
-   --> client/src/ui.rs:510:18
+note: method defined here
+   --> /home/y4my4m/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/ratatui-0.29.0/src/terminal/frame.rs:206:12
     |
-510 |     let size = f.size();
-    |                  ^^^^
-
-warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
-   --> client/src/ui.rs:523:37
+206 |     pub fn set_cursor_position<P: Into<Position>>(&mut self, position: P) {
+    |            ^^^^^^^^^^^^^^^^^^^
+help: remove the extra argument
     |
-523 |     let area = draw_centered_rect(f.size(), 70, 60);
-    |                                     ^^^^
-
-warning: use of deprecated method `ratatui::Frame::<'_>::size`: use .area() as it's the more correct name
-   --> client/src/ui.rs:598:37
+489 -     f.set_cursor_position(area.x + app.current_input.len() as u16 + 1, area.y + 1);
+489 +     f.set_cursor_position(area.x + app.current_input.len() as u16 + 1);
     |
-598 |     let area = draw_centered_rect(f.size(), 40, 20);
-    |                                     ^^^^
 
-For more information about this error, try `rustc --explain E0599`.
-warning: `client` (bin "client") generated 15 warnings
-error: could not compile `client` (bin "client") due to 1 previous error; 15 warnings emitted
+warning: unused import: `GenericImage`
+   --> client/src/app.rs:416:35
+    |
+416 |         use image::{DynamicImage, GenericImage, GenericImageView, ImageFormat, Rgba, RgbaImage, imageops};
+    |                                   ^^^^^^^^^^^^
+
+warning: unused variable: `banner_cells_w`
+   --> client/src/app.rs:195:17
+    |
+195 |             let banner_cells_w = 70 * 100 / 100; // 70% of TUI width, but we don't have the actual width here
+    |                 ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_banner_cells_w`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `banner_cells_h`
+   --> client/src/app.rs:196:17
+    |
+196 |             let banner_cells_h = 7; // as in draw_profile_view_popup
+    |                 ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_banner_cells_h`
+
+Some errors have detailed explanations: E0061, E0277.
+For more information about an error, try `rustc --explain E0061`.
+warning: `client` (bin "client") generated 8 warnings
+error: could not compile `client` (bin "client") due to 14 previous errors; 8 warnings emitted

@@ -399,7 +399,7 @@ dependencies = [
  "image",
  "once_cell",
  "rand",
- "ratatui 0.29.0",
+ "ratatui",
  "ratatui-image",
  "rodio",
  "tokio",
@@ -427,22 +427,9 @@ dependencies = [
 name = "common"
 version = "0.1.0"
 dependencies = [
- "ratatui 0.29.0",
+ "ratatui",
  "serde",
  "uuid",
-]
-
-[[package]]
-name = "compact_str"
-version = "0.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f86b9c4c00838774a6d902ef931eff7470720c51d90c2e32cfe15dc304737b3f"
-dependencies = [
- "castaway",
- "cfg-if",
- "itoa",
- "ryu",
- "static_assertions",
 ]
 
 [[package]]
@@ -1716,33 +1703,13 @@ dependencies = [
 
 [[package]]
 name = "ratatui"
-version = "0.26.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f44c9e68fd46eda15c646fbb85e1040b657a58cdc8c98db1d97a55930d991eef"
-dependencies = [
- "bitflags 2.9.1",
- "cassowary",
- "compact_str 0.7.1",
- "crossterm 0.27.0",
- "itertools 0.12.1",
- "lru",
- "paste",
- "stability",
- "strum",
- "unicode-segmentation",
- "unicode-truncate",
- "unicode-width 0.1.14",
-]
-
-[[package]]
-name = "ratatui"
 version = "0.29.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "eabd94c2f37801c20583fc49dd5cd6b0ba68c716787c2dd6ed18571e1e63117b"
 dependencies = [
  "bitflags 2.9.1",
  "cassowary",
- "compact_str 0.8.1",
+ "compact_str",
  "crossterm 0.28.1",
  "indoc",
  "instability",
@@ -1766,7 +1733,7 @@ dependencies = [
  "icy_sixel",
  "image",
  "rand",
- "ratatui 0.29.0",
+ "ratatui",
  "rustix",
  "thiserror",
  "windows 0.58.0",
@@ -2016,7 +1983,7 @@ dependencies = [
  "common",
  "futures",
  "rand_core",
- "ratatui 0.26.3",
+ "ratatui",
  "regex",
  "rusqlite",
  "serde",
@@ -2109,16 +2076,6 @@ checksum = "e22376abed350d73dd1cd119b57ffccad95b4e585a7cda43e286245ce23c0678"
 dependencies = [
  "libc",
  "windows-sys 0.52.0",
-]
-
-[[package]]
-name = "stability"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d904e7009df136af5297832a3ace3370cd14ff1546a232f4f185036c2736fcac"
-dependencies = [
- "quote",
- "syn",
 ]
 
 [[package]]
