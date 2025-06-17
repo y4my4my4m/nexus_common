@@ -204,6 +204,7 @@ pub enum ServerMessage {
     Profile(UserProfile),
     UserUpdated(User), // Broadcast when a user updates their profile
     Servers(Vec<Server>), // List of servers and their channels
+    NewChannelMessage(ChannelMessage), // <-- Add this variant
 }
 
 
