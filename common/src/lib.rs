@@ -37,7 +37,7 @@ pub struct SerializableColor(#[serde(with = "ColorDef")] pub Color);
 
 // --- User & Role Management ---
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum UserRole {
     User,
     Moderator,
