@@ -99,6 +99,7 @@ pub struct Thread {
     pub title: String,
     pub author: User,
     pub posts: Vec<Post>,
+    pub timestamp: i64,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -106,6 +107,7 @@ pub struct Post {
     pub id: Uuid,
     pub author: User,
     pub content: String,
+    pub timestamp: i64,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -249,10 +251,12 @@ pub fn create_initial_forums() -> Vec<Forum> {
                     id: Uuid::new_v4(),
                     title: "Militech's 'Aegis' Firewall - Any exploits?".to_string(),
                     author: system_user.clone(),
+                    timestamp: 1633072800,
                     posts: vec![ Post {
                         id: Uuid::new_v4(),
                         author: system_user.clone(),
                         content: "I've been probing their new Aegis system. It's tough.".to_string(),
+                        timestamp: 1633072800,
                     }],
                 },
             ],
