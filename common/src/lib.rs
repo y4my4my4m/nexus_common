@@ -198,7 +198,7 @@ pub enum ClientMessage {
     GetProfile { user_id: Uuid },
     GetServers, // Request all servers the user is a member of
     // --- CHANNEL MESSAGE FETCH ---
-    GetChannelMessages { channel_id: Uuid },
+    GetChannelMessages { channel_id: Uuid, before: Option<Uuid> },
     GetChannelUserList { channel_id: Uuid }, // Add the missing variant to ClientMessage
 }
 
@@ -222,7 +222,7 @@ pub enum ServerMessage {
     Servers(Vec<Server>), // List of servers and their channels
     NewChannelMessage(ChannelMessage),
     // --- CHANNEL MESSAGE FETCH ---
-    ChannelMessages { channel_id: Uuid, messages: Vec<ChannelMessage> },
+    ChannelMessages { channel_id: Uuid, messages: Vec<ChannelMessage>, history_complete: bool },
     // --- NEW: Per-channel user list with status ---
     ChannelUserList { channel_id: Uuid, users: Vec<User> },
 }
