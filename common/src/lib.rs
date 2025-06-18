@@ -164,6 +164,39 @@ pub struct ChannelMessage {
     pub author_profile_pic: Option<String>, // base64 or URL
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct DirectMessage {
+    pub id: Uuid,
+    pub from: Uuid,
+    pub to: Uuid,
+    pub timestamp: i64,
+    pub content: String,
+    pub author_username: String,
+    #[serde(with = "ColorDef")]
+    pub author_color: Color,
+    pub author_profile_pic: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
+pub enum NotificationType {
+    ThreadReply,
+    DM,
+    Announcement,
+    Mention,
+    Other(String),
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Notification {
+    pub id: Uuid,
+    pub user_id: Uuid,
+    pub notif_type: NotificationType,
+    pub related_id: Uuid,
+    pub created_at: i64,
+    pub read: bool,
+    pub extra: Option<String>,
+}
+
 // --- Network Protocol Definitions ---
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -201,7 +234,13 @@ pub enum ClientMessage {
     GetServers, // Request all servers the user is a member of
     // --- CHANNEL MESSAGE FETCH ---
     GetChannelMessages { channel_id: Uuid, before: Option<Uuid> },
-    GetChannelUserList { channel_id: Uuid }, // Add the missing variant to ClientMessage
+    GetChannelUserList { channel_id: Uuid },
+    // --- DM FETCH ---
+    GetDMUserList, // Request list of users you have DMs with
+    GetDirectMessages { user_id: Uuid, before: Option<i64> }, // Fetch DMs with a user, paginated by timestamp
+    // --- NOTIFICATIONS ---
+    GetNotifications { before: Option<i64> },
+    MarkNotificationRead { notification_id: Uuid },
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -227,6 +266,12 @@ pub enum ServerMessage {
     ChannelMessages { channel_id: Uuid, messages: Vec<ChannelMessage>, history_complete: bool },
     // --- NEW: Per-channel user list with status ---
     ChannelUserList { channel_id: Uuid, users: Vec<User> },
+    // --- DM FETCH ---
+    DMUserList(Vec<User>), // List of users you have DMs with
+    DirectMessages { user_id: Uuid, messages: Vec<DirectMessage>, history_complete: bool },
+    // --- NOTIFICATIONS ---
+    Notifications { notifications: Vec<Notification>, history_complete: bool },
+    NotificationUpdated { notification_id: Uuid, read: bool },
 }
 
 
