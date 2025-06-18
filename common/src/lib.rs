@@ -44,6 +44,14 @@ pub enum UserRole {
     Admin,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+pub enum UserStatus {
+    Connected,
+    Away,
+    Busy,
+    Offline,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct User {
     pub id: Uuid,
@@ -53,6 +61,7 @@ pub struct User {
     pub role: UserRole,
     pub profile_pic: Option<String>,
     pub cover_banner: Option<String>,
+    pub status: UserStatus, // Added status field
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -190,6 +199,7 @@ pub enum ClientMessage {
     GetServers, // Request all servers the user is a member of
     // --- CHANNEL MESSAGE FETCH ---
     GetChannelMessages { channel_id: Uuid },
+    GetChannelUserList { channel_id: Uuid }, // Add the missing variant to ClientMessage
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -213,6 +223,8 @@ pub enum ServerMessage {
     NewChannelMessage(ChannelMessage),
     // --- CHANNEL MESSAGE FETCH ---
     ChannelMessages { channel_id: Uuid, messages: Vec<ChannelMessage> },
+    // --- NEW: Per-channel user list with status ---
+    ChannelUserList { channel_id: Uuid, users: Vec<User> },
 }
 
 
@@ -225,6 +237,7 @@ pub fn create_initial_forums() -> Vec<Forum> {
         role: UserRole::Admin,
         profile_pic: Some("system.png".to_string()),
         cover_banner: Some("system_banner.png".to_string()),
+        status: UserStatus::Connected, // Default to connected
     };
     vec![
         Forum {
