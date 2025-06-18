@@ -179,7 +179,6 @@ pub enum ClientMessage {
     CreateThread { forum_id: Uuid, title: String, content: String },
     CreatePost { thread_id: Uuid, content: String },
     // Chat
-    SendChatMessage(String),
     SendDirectMessage { to: Uuid, content: String },
     SendChannelMessage { channel_id: Uuid, content: String },
     // Moderation
