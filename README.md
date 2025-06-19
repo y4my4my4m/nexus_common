@@ -24,3 +24,13 @@ cp target/x86_64-unknown-linux-musl/release/client ./dist/nexus-client-linux-voi
 cargo run --release -p client
 cargo run --release -p server
 ```
+
+## Run with remote server
+
+```bash
+# client
+./nexus-client-linux-arch 199.192.20.57:8080
+
+# server
+cargo run --release -p server 0.0.0.0:8080
+```
