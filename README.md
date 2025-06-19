@@ -1,4 +1,4 @@
-![Screenshot_20250618_160320](https://github.com/user-attachments/assets/ebb945fe-7aa7-4eaa-988f-5a8595140314)
+![Screenshot_20250620_025053](https://github.com/user-attachments/assets/040cdaec-b141-4280-9b57-c8558770bf1d)
 
 https://github.com/y4my4my4m/cyberpunk_bbs_server
 
