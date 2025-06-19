@@ -251,7 +251,7 @@ pub enum ServerMessage {
     // General
     Forums(Vec<Forum>),
     NewChatMessage(ChatMessage),
-    DirectMessage { from: User, content: String },
+    DirectMessage(DirectMessage),
     MentionNotification { from: User, content: String },
     Notification(String, bool), // Message, is_error
     // User management
