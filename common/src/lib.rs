@@ -249,6 +249,9 @@ pub enum ClientMessage {
     // Server invites
     SendServerInvite { to_user_id: Uuid, server_id: Uuid },
     RespondToServerInvite { invite_id: Uuid, accept: bool },
+    // New: Accept/decline invite from a specific user (for DM commands)
+    AcceptServerInviteFromUser { from_user_id: Uuid },
+    DeclineServerInviteFromUser { from_user_id: Uuid },
     // Moderation
     DeletePost(Uuid),
     DeleteThread(Uuid),
