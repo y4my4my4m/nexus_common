@@ -4,6 +4,9 @@ use ratatui::style::Color;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+pub mod config;
+pub use config::{ServerConfig, ClientConfig};
+
 // --- Serde helper for ratatui::Color ---
 // *** FIX 1: MOVE THIS TO THE TOP LEVEL ***
 #[derive(Serialize, Deserialize)]
