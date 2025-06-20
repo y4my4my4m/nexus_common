@@ -197,6 +197,27 @@ pub struct Notification {
     pub extra: Option<String>,
 }
 
+// --- Server Invites ---
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ServerInvite {
+    pub id: Uuid,
+    pub from_user: User,
+    pub to_user_id: Uuid,
+    pub server: Server,
+    pub timestamp: i64,
+    pub status: ServerInviteStatus,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
+pub enum ServerInviteStatus {
+    Pending,
+    Accepted,
+    Declined,
+    Expired,
+}
+
+
 // --- Network Protocol Definitions ---
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -225,6 +246,9 @@ pub enum ClientMessage {
     // Chat
     SendDirectMessage { to: Uuid, content: String },
     SendChannelMessage { channel_id: Uuid, content: String },
+    // Server invites
+    SendServerInvite { to_user_id: Uuid, server_id: Uuid },
+    RespondToServerInvite { invite_id: Uuid, accept: bool },
     // Moderation
     DeletePost(Uuid),
     DeleteThread(Uuid),
@@ -233,7 +257,7 @@ pub enum ClientMessage {
     GetProfile { user_id: Uuid },
     GetServers, // Request all servers the user is a member of
     // --- CHANNEL MESSAGE FETCH ---
-    GetChannelMessages { channel_id: Uuid, before: Option<Uuid> },
+    GetChannelMessages { channel_id: Uuid, before: Option<i64> },
     GetChannelUserList { channel_id: Uuid },
     // --- DM FETCH ---
     GetDMUserList, // Request list of users you have DMs with
@@ -254,6 +278,9 @@ pub enum ServerMessage {
     DirectMessage(DirectMessage),
     MentionNotification { from: User, content: String },
     Notification(String, bool), // Message, is_error
+    // Server invites
+    ServerInviteReceived(ServerInvite),
+    ServerInviteResponse { invite_id: Uuid, accepted: bool, user: User },
     // User management
     UserList(Vec<User>), // List of connected users
     UserJoined(User),    // A user joined
