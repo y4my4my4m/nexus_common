@@ -278,6 +278,8 @@ pub enum ClientMessage {
     },
     // Forums
     GetForums,
+    CreateForum { name: String, description: String },
+    DeleteForum { forum_id: Uuid },
     CreateThread { forum_id: Uuid, title: String, content: String },
     CreatePost { thread_id: Uuid, content: String },
     // Chat
