@@ -296,15 +296,45 @@ pub enum ClientMessage {
     GetUserList, // Request the list of connected users
     GetProfile { user_id: Uuid },
     GetServers, // Request all servers the user is a member of
-    // --- CHANNEL MESSAGE FETCH ---
+    // --- ENHANCED PAGINATION SUPPORT ---
+    GetChannelMessagesPaginated { 
+        channel_id: Uuid, 
+        cursor: PaginationCursor,
+        limit: Option<usize>,
+        direction: PaginationDirection,
+    },
+    GetDirectMessagesPaginated { 
+        user_id: Uuid, 
+        cursor: PaginationCursor,
+        limit: Option<usize>,
+        direction: PaginationDirection,
+    },
+    // --- LEGACY COMPATIBILITY ---
     GetChannelMessages { channel_id: Uuid, before: Option<i64> },
     GetChannelUserList { channel_id: Uuid },
-    // --- DM FETCH ---
     GetDMUserList, // Request list of users you have DMs with
     GetDirectMessages { user_id: Uuid, before: Option<i64> }, // Fetch DMs with a user, paginated by timestamp
     // --- NOTIFICATIONS ---
     GetNotifications { before: Option<i64> },
     MarkNotificationRead { notification_id: Uuid },
+    // --- CACHE MANAGEMENT ---
+    InvalidateImageCache { keys: Vec<String> },
+    GetCacheStats,
+}
+
+/// Pagination cursor for network protocol
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+pub enum PaginationCursor {
+    Timestamp(i64),
+    Offset(usize),
+    Start,
+}
+
+/// Pagination direction for network protocol
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+pub enum PaginationDirection {
+    Forward,
+    Backward,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -329,16 +359,44 @@ pub enum ServerMessage {
     UserUpdated(User), // Broadcast when a user updates their profile
     Servers(Vec<Server>), // List of servers and their channels
     NewChannelMessage(ChannelMessage),
-    // --- CHANNEL MESSAGE FETCH ---
+    // --- ENHANCED PAGINATION RESPONSES ---
+    ChannelMessagesPaginated { 
+        channel_id: Uuid, 
+        messages: Vec<ChannelMessage>, 
+        has_more: bool,
+        next_cursor: Option<PaginationCursor>,
+        prev_cursor: Option<PaginationCursor>,
+        total_count: Option<usize>,
+    },
+    DirectMessagesPaginated { 
+        user_id: Uuid, 
+        messages: Vec<DirectMessage>, 
+        has_more: bool,
+        next_cursor: Option<PaginationCursor>,
+        prev_cursor: Option<PaginationCursor>,
+        total_count: Option<usize>,
+    },
+    // --- LEGACY COMPATIBILITY ---
     ChannelMessages { channel_id: Uuid, messages: Vec<ChannelMessage>, history_complete: bool },
-    // --- NEW: Per-channel user list with status ---
     ChannelUserList { channel_id: Uuid, users: Vec<User> },
-    // --- DM FETCH ---
     DMUserList(Vec<User>), // List of users you have DMs with
     DirectMessages { user_id: Uuid, messages: Vec<DirectMessage>, history_complete: bool },
     // --- NOTIFICATIONS ---
     Notifications { notifications: Vec<Notification>, history_complete: bool },
-    NotificationUpdated { notification_id: Uuid, read: bool },
+    // --- CACHE MANAGEMENT ---
+    CacheStats { 
+        total_entries: usize, 
+        total_size_mb: f64, 
+        hit_ratio: f64,
+        expired_entries: usize,
+    },
+    ImageCacheInvalidated { keys: Vec<String> },
+    // --- PERFORMANCE METRICS ---
+    PerformanceMetrics {
+        query_time_ms: u64,
+        cache_hit_rate: f64,
+        message_count: usize,
+    },
 }
 
 
