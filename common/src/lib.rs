@@ -1,42 +1,82 @@
 // common/src/lib.rs
 
-use ratatui::style::Color;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 pub mod config;
 pub use config::{ServerConfig, ClientConfig};
 
-// --- Serde helper for ratatui::Color ---
-// *** FIX 1: MOVE THIS TO THE TOP LEVEL ***
-#[derive(Serialize, Deserialize)]
-#[serde(remote = "Color")]
-pub enum ColorDef {
-    Reset,
-    Black,
-    Red,
-    Green,
-    Yellow,
-    Blue,
-    Magenta,
-    Cyan,
-    Gray,
-    DarkGray,
-    LightRed,
-    LightGreen,
-    LightYellow,
-    LightBlue,
-    LightMagenta,
-    LightCyan,
-    White,
-    Rgb(u8, u8, u8),
-    Indexed(u8),
+// Simple color representation that works for both client and server
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct UserColor(pub String);
+
+impl UserColor {
+    pub fn new(color: impl Into<String>) -> Self {
+        Self(color.into())
+    }
+    
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
 }
 
-// *** FIX 2: CREATE A WRAPPER FOR DIRECT SERIALIZATION ***
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
-pub struct SerializableColor(#[serde(with = "ColorDef")] pub Color);
+impl From<String> for UserColor {
+    fn from(s: String) -> Self {
+        Self(s)
+    }
+}
 
+impl From<&str> for UserColor {
+    fn from(s: &str) -> Self {
+        Self(s.to_string())
+    }
+}
+
+// For client compatibility with ratatui
+#[cfg(feature = "ratatui")]
+impl From<ratatui::style::Color> for UserColor {
+    fn from(color: ratatui::style::Color) -> Self {
+        match color {
+            ratatui::style::Color::Rgb(r, g, b) => Self(format!("#{:02X}{:02X}{:02X}", r, g, b)),
+            ratatui::style::Color::Red => Self("Red".to_string()),
+            ratatui::style::Color::Green => Self("Green".to_string()),
+            ratatui::style::Color::Blue => Self("Blue".to_string()),
+            ratatui::style::Color::Yellow => Self("Yellow".to_string()),
+            ratatui::style::Color::Cyan => Self("Cyan".to_string()),
+            ratatui::style::Color::Magenta => Self("Magenta".to_string()),
+            ratatui::style::Color::White => Self("White".to_string()),
+            ratatui::style::Color::Black => Self("Black".to_string()),
+            _ => Self("Cyan".to_string()), // Default
+        }
+    }
+}
+
+#[cfg(feature = "ratatui")]
+impl Into<ratatui::style::Color> for UserColor {
+    fn into(self) -> ratatui::style::Color {
+        if self.0.starts_with('#') && self.0.len() == 7 {
+            if let (Ok(r), Ok(g), Ok(b)) = (
+                u8::from_str_radix(&self.0[1..3], 16),
+                u8::from_str_radix(&self.0[3..5], 16),
+                u8::from_str_radix(&self.0[5..7], 16),
+            ) {
+                return ratatui::style::Color::Rgb(r, g, b);
+            }
+        }
+        
+        match self.0.as_str() {
+            "Red" => ratatui::style::Color::Red,
+            "Green" => ratatui::style::Color::Green,
+            "Blue" => ratatui::style::Color::Blue,
+            "Yellow" => ratatui::style::Color::Yellow,
+            "Cyan" => ratatui::style::Color::Cyan,
+            "Magenta" => ratatui::style::Color::Magenta,
+            "White" => ratatui::style::Color::White,
+            "Black" => ratatui::style::Color::Black,
+            _ => ratatui::style::Color::Cyan, // Default
+        }
+    }
+}
 
 // --- User & Role Management ---
 
@@ -59,12 +99,11 @@ pub enum UserStatus {
 pub struct User {
     pub id: Uuid,
     pub username: String,
-    #[serde(with = "ColorDef")]
-    pub color: Color,
+    pub color: UserColor,
     pub role: UserRole,
     pub profile_pic: Option<String>,
     pub cover_banner: Option<String>,
-    pub status: UserStatus, // Added status field
+    pub status: UserStatus,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -73,8 +112,7 @@ pub struct UserProfile {
     pub username: String,
     #[serde(rename = "password_hash")]
     pub hash: String,
-    #[serde(with = "ColorDef")]
-    pub color: Color,
+    pub color: UserColor,
     pub role: UserRole,
     // Profile fields
     pub bio: Option<String>,
@@ -117,8 +155,7 @@ pub struct Post {
 pub struct ChatMessage {
     pub author: String,
     pub content: String,
-    #[serde(with = "ColorDef")]
-    pub color: Color,
+    pub color: UserColor,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -162,8 +199,7 @@ pub struct ChannelMessage {
     pub content: String,
     // --- Added fields for author info ---
     pub author_username: String,
-    #[serde(with = "ColorDef")]
-    pub author_color: Color,
+    pub author_color: UserColor,
     pub author_profile_pic: Option<String>, // base64 or URL
 }
 
@@ -175,8 +211,7 @@ pub struct DirectMessage {
     pub timestamp: i64,
     pub content: String,
     pub author_username: String,
-    #[serde(with = "ColorDef")]
-    pub author_color: Color,
+    pub author_color: UserColor,
     pub author_profile_pic: Option<String>,
 }
 
@@ -231,8 +266,7 @@ pub enum ClientMessage {
     Logout,
     // User
     UpdatePassword(String),
-    // *** FIX 2: USE THE WRAPPER STRUCT HERE ***
-    UpdateColor(SerializableColor),
+    UpdateColor(UserColor), // Changed from SerializableColor to UserColor
     UpdateProfile {
         bio: Option<String>,
         url1: Option<String>,
@@ -313,7 +347,7 @@ pub fn create_initial_forums() -> Vec<Forum> {
     let system_user = User {
         id: Uuid::new_v4(),
         username: "system".to_string(),
-        color: Color::Red,
+        color: UserColor::new("Red"),
         role: UserRole::Admin,
         profile_pic: Some("system.png".to_string()),
         cover_banner: Some("system_banner.png".to_string()),

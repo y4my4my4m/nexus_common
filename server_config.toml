@@ -1,0 +1,52 @@
+[network]
+bind_address = "127.0.0.1"
+port = 8080
+max_connections = 1000
+connection_timeout_seconds = 30
+keepalive_interval_seconds = 60
+
+[rate_limits]
+messages_per_minute = 60
+requests_per_second = 10
+file_uploads_per_hour = 10
+registration_attempts_per_hour = 5
+login_attempts_per_minute = 5
+channel_joins_per_minute = 20
+
+[file_upload]
+enabled = true
+max_file_size_mb = 10
+allowed_types = [
+    "image/png",
+    "image/jpeg",
+    "image/gif",
+    "image/webp",
+    "text/plain",
+]
+max_files_per_user = 100
+storage_path = "./uploads"
+cleanup_interval_hours = 24
+
+[moderation]
+auto_moderation_enabled = true
+blocked_words = []
+blocked_patterns = []
+auto_ban_threshold = 5
+warning_threshold = 3
+message_length_limit = 2000
+channel_creation_role = "Moderator"
+
+[database]
+path = "cyberpunk_bbs.db"
+backup_interval_hours = 6
+backup_retention_days = 30
+connection_pool_size = 10
+query_timeout_seconds = 30
+
+[security]
+require_secure_passwords = true
+min_password_length = 8
+session_timeout_hours = 24
+audit_logging_enabled = true
+ip_whitelist = []
+ip_blacklist = []
