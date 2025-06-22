@@ -52,19 +52,19 @@ impl From<ratatui::style::Color> for UserColor {
 }
 
 #[cfg(feature = "ratatui")]
-impl Into<ratatui::style::Color> for UserColor {
-    fn into(self) -> ratatui::style::Color {
-        if self.0.starts_with('#') && self.0.len() == 7 {
+impl From<UserColor> for ratatui::style::Color {
+    fn from(user_color: UserColor) -> ratatui::style::Color {
+        if user_color.0.starts_with('#') && user_color.0.len() == 7 {
             if let (Ok(r), Ok(g), Ok(b)) = (
-                u8::from_str_radix(&self.0[1..3], 16),
-                u8::from_str_radix(&self.0[3..5], 16),
-                u8::from_str_radix(&self.0[5..7], 16),
+                u8::from_str_radix(&user_color.0[1..3], 16),
+                u8::from_str_radix(&user_color.0[3..5], 16),
+                u8::from_str_radix(&user_color.0[5..7], 16),
             ) {
                 return ratatui::style::Color::Rgb(r, g, b);
             }
         }
         
-        match self.0.as_str() {
+        match user_color.0.as_str() {
             "Red" => ratatui::style::Color::Red,
             "Green" => ratatui::style::Color::Green,
             "Blue" => ratatui::style::Color::Blue,
