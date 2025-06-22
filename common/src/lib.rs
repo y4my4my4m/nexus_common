@@ -1,39 +1,82 @@
 // common/src/lib.rs
 
-use ratatui::style::Color;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-// --- Serde helper for ratatui::Color ---
-// *** FIX 1: MOVE THIS TO THE TOP LEVEL ***
-#[derive(Serialize, Deserialize)]
-#[serde(remote = "Color")]
-pub enum ColorDef {
-    Reset,
-    Black,
-    Red,
-    Green,
-    Yellow,
-    Blue,
-    Magenta,
-    Cyan,
-    Gray,
-    DarkGray,
-    LightRed,
-    LightGreen,
-    LightYellow,
-    LightBlue,
-    LightMagenta,
-    LightCyan,
-    White,
-    Rgb(u8, u8, u8),
-    Indexed(u8),
+pub mod config;
+pub use config::{ServerConfig, ClientConfig};
+
+// Simple color representation that works for both client and server
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct UserColor(pub String);
+
+impl UserColor {
+    pub fn new(color: impl Into<String>) -> Self {
+        Self(color.into())
+    }
+    
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
 }
 
-// *** FIX 2: CREATE A WRAPPER FOR DIRECT SERIALIZATION ***
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
-pub struct SerializableColor(#[serde(with = "ColorDef")] pub Color);
+impl From<String> for UserColor {
+    fn from(s: String) -> Self {
+        Self(s)
+    }
+}
 
+impl From<&str> for UserColor {
+    fn from(s: &str) -> Self {
+        Self(s.to_string())
+    }
+}
+
+// For client compatibility with ratatui
+#[cfg(feature = "ratatui")]
+impl From<ratatui::style::Color> for UserColor {
+    fn from(color: ratatui::style::Color) -> Self {
+        match color {
+            ratatui::style::Color::Rgb(r, g, b) => Self(format!("#{:02X}{:02X}{:02X}", r, g, b)),
+            ratatui::style::Color::Red => Self("Red".to_string()),
+            ratatui::style::Color::Green => Self("Green".to_string()),
+            ratatui::style::Color::Blue => Self("Blue".to_string()),
+            ratatui::style::Color::Yellow => Self("Yellow".to_string()),
+            ratatui::style::Color::Cyan => Self("Cyan".to_string()),
+            ratatui::style::Color::Magenta => Self("Magenta".to_string()),
+            ratatui::style::Color::White => Self("White".to_string()),
+            ratatui::style::Color::Black => Self("Black".to_string()),
+            _ => Self("Cyan".to_string()), // Default
+        }
+    }
+}
+
+#[cfg(feature = "ratatui")]
+impl From<UserColor> for ratatui::style::Color {
+    fn from(user_color: UserColor) -> ratatui::style::Color {
+        if user_color.0.starts_with('#') && user_color.0.len() == 7 {
+            if let (Ok(r), Ok(g), Ok(b)) = (
+                u8::from_str_radix(&user_color.0[1..3], 16),
+                u8::from_str_radix(&user_color.0[3..5], 16),
+                u8::from_str_radix(&user_color.0[5..7], 16),
+            ) {
+                return ratatui::style::Color::Rgb(r, g, b);
+            }
+        }
+        
+        match user_color.0.as_str() {
+            "Red" => ratatui::style::Color::Red,
+            "Green" => ratatui::style::Color::Green,
+            "Blue" => ratatui::style::Color::Blue,
+            "Yellow" => ratatui::style::Color::Yellow,
+            "Cyan" => ratatui::style::Color::Cyan,
+            "Magenta" => ratatui::style::Color::Magenta,
+            "White" => ratatui::style::Color::White,
+            "Black" => ratatui::style::Color::Black,
+            _ => ratatui::style::Color::Cyan, // Default
+        }
+    }
+}
 
 // --- User & Role Management ---
 
@@ -56,12 +99,11 @@ pub enum UserStatus {
 pub struct User {
     pub id: Uuid,
     pub username: String,
-    #[serde(with = "ColorDef")]
-    pub color: Color,
+    pub color: UserColor,
     pub role: UserRole,
     pub profile_pic: Option<String>,
     pub cover_banner: Option<String>,
-    pub status: UserStatus, // Added status field
+    pub status: UserStatus,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -70,8 +112,7 @@ pub struct UserProfile {
     pub username: String,
     #[serde(rename = "password_hash")]
     pub hash: String,
-    #[serde(with = "ColorDef")]
-    pub color: Color,
+    pub color: UserColor,
     pub role: UserRole,
     // Profile fields
     pub bio: Option<String>,
@@ -114,8 +155,7 @@ pub struct Post {
 pub struct ChatMessage {
     pub author: String,
     pub content: String,
-    #[serde(with = "ColorDef")]
-    pub color: Color,
+    pub color: UserColor,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -159,8 +199,7 @@ pub struct ChannelMessage {
     pub content: String,
     // --- Added fields for author info ---
     pub author_username: String,
-    #[serde(with = "ColorDef")]
-    pub author_color: Color,
+    pub author_color: UserColor,
     pub author_profile_pic: Option<String>, // base64 or URL
 }
 
@@ -172,8 +211,7 @@ pub struct DirectMessage {
     pub timestamp: i64,
     pub content: String,
     pub author_username: String,
-    #[serde(with = "ColorDef")]
-    pub author_color: Color,
+    pub author_color: UserColor,
     pub author_profile_pic: Option<String>,
 }
 
@@ -228,8 +266,7 @@ pub enum ClientMessage {
     Logout,
     // User
     UpdatePassword(String),
-    // *** FIX 2: USE THE WRAPPER STRUCT HERE ***
-    UpdateColor(SerializableColor),
+    UpdateColor(UserColor), // Changed from SerializableColor to UserColor
     UpdateProfile {
         bio: Option<String>,
         url1: Option<String>,
@@ -241,6 +278,8 @@ pub enum ClientMessage {
     },
     // Forums
     GetForums,
+    CreateForum { name: String, description: String },
+    DeleteForum { forum_id: Uuid },
     CreateThread { forum_id: Uuid, title: String, content: String },
     CreatePost { thread_id: Uuid, content: String },
     // Chat
@@ -259,15 +298,45 @@ pub enum ClientMessage {
     GetUserList, // Request the list of connected users
     GetProfile { user_id: Uuid },
     GetServers, // Request all servers the user is a member of
-    // --- CHANNEL MESSAGE FETCH ---
+    // --- ENHANCED PAGINATION SUPPORT ---
+    GetChannelMessagesPaginated { 
+        channel_id: Uuid, 
+        cursor: PaginationCursor,
+        limit: Option<usize>,
+        direction: PaginationDirection,
+    },
+    GetDirectMessagesPaginated { 
+        user_id: Uuid, 
+        cursor: PaginationCursor,
+        limit: Option<usize>,
+        direction: PaginationDirection,
+    },
+    // --- LEGACY COMPATIBILITY ---
     GetChannelMessages { channel_id: Uuid, before: Option<i64> },
     GetChannelUserList { channel_id: Uuid },
-    // --- DM FETCH ---
     GetDMUserList, // Request list of users you have DMs with
     GetDirectMessages { user_id: Uuid, before: Option<i64> }, // Fetch DMs with a user, paginated by timestamp
     // --- NOTIFICATIONS ---
     GetNotifications { before: Option<i64> },
     MarkNotificationRead { notification_id: Uuid },
+    // --- CACHE MANAGEMENT ---
+    InvalidateImageCache { keys: Vec<String> },
+    GetCacheStats,
+}
+
+/// Pagination cursor for network protocol
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+pub enum PaginationCursor {
+    Timestamp(i64),
+    Offset(usize),
+    Start,
+}
+
+/// Pagination direction for network protocol
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+pub enum PaginationDirection {
+    Forward,
+    Backward,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -292,16 +361,44 @@ pub enum ServerMessage {
     UserUpdated(User), // Broadcast when a user updates their profile
     Servers(Vec<Server>), // List of servers and their channels
     NewChannelMessage(ChannelMessage),
-    // --- CHANNEL MESSAGE FETCH ---
+    // --- ENHANCED PAGINATION RESPONSES ---
+    ChannelMessagesPaginated { 
+        channel_id: Uuid, 
+        messages: Vec<ChannelMessage>, 
+        has_more: bool,
+        next_cursor: Option<PaginationCursor>,
+        prev_cursor: Option<PaginationCursor>,
+        total_count: Option<usize>,
+    },
+    DirectMessagesPaginated { 
+        user_id: Uuid, 
+        messages: Vec<DirectMessage>, 
+        has_more: bool,
+        next_cursor: Option<PaginationCursor>,
+        prev_cursor: Option<PaginationCursor>,
+        total_count: Option<usize>,
+    },
+    // --- LEGACY COMPATIBILITY ---
     ChannelMessages { channel_id: Uuid, messages: Vec<ChannelMessage>, history_complete: bool },
-    // --- NEW: Per-channel user list with status ---
     ChannelUserList { channel_id: Uuid, users: Vec<User> },
-    // --- DM FETCH ---
     DMUserList(Vec<User>), // List of users you have DMs with
     DirectMessages { user_id: Uuid, messages: Vec<DirectMessage>, history_complete: bool },
     // --- NOTIFICATIONS ---
     Notifications { notifications: Vec<Notification>, history_complete: bool },
-    NotificationUpdated { notification_id: Uuid, read: bool },
+    // --- CACHE MANAGEMENT ---
+    CacheStats { 
+        total_entries: usize, 
+        total_size_mb: f64, 
+        hit_ratio: f64,
+        expired_entries: usize,
+    },
+    ImageCacheInvalidated { keys: Vec<String> },
+    // --- PERFORMANCE METRICS ---
+    PerformanceMetrics {
+        query_time_ms: u64,
+        cache_hit_rate: f64,
+        message_count: usize,
+    },
 }
 
 
@@ -310,7 +407,7 @@ pub fn create_initial_forums() -> Vec<Forum> {
     let system_user = User {
         id: Uuid::new_v4(),
         username: "system".to_string(),
-        color: Color::Red,
+        color: UserColor::new("Red"),
         role: UserRole::Admin,
         profile_pic: Some("system.png".to_string()),
         cover_banner: Some("system_banner.png".to_string()),
