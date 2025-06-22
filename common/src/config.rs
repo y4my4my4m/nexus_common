@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use std::time::Duration;
 
 /// Server configuration with rate limits, moderation, and file upload settings
 #[derive(Debug, Clone, Serialize, Deserialize)]
