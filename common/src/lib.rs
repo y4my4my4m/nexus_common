@@ -87,7 +87,7 @@ pub enum UserRole {
     Admin,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UserStatus {
     Connected,
     Away,
@@ -106,15 +106,14 @@ pub struct User {
     pub status: UserStatus,
 }
 
+/// Complete user profile with all fields (for profile editing/viewing)
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct UserProfile {
     pub id: Uuid,
     pub username: String,
-    #[serde(rename = "password_hash")]
-    pub hash: String,
+    pub hash: String, // Password hash (server-side only)
     pub color: UserColor,
     pub role: UserRole,
-    // Profile fields
     pub bio: Option<String>,
     pub url1: Option<String>,
     pub url2: Option<String>,
@@ -122,6 +121,40 @@ pub struct UserProfile {
     pub location: Option<String>,
     pub profile_pic: Option<String>,
     pub cover_banner: Option<String>,
+}
+
+/// Lightweight user info without profile images - use this for lists, mentions, etc.
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct UserInfo {
+    pub id: Uuid,
+    pub username: String,
+    pub color: UserColor,
+    pub role: UserRole,
+    pub status: UserStatus,
+}
+
+impl From<User> for UserInfo {
+    fn from(user: User) -> Self {
+        Self {
+            id: user.id,
+            username: user.username,
+            color: user.color,
+            role: user.role,
+            status: user.status,
+        }
+    }
+}
+
+impl From<&User> for UserInfo {
+    fn from(user: &User) -> Self {
+        Self {
+            id: user.id,
+            username: user.username.clone(),
+            color: user.color.clone(),
+            role: user.role,
+            status: user.status, // Now UserStatus implements Copy, so no clone needed
+        }
+    }
 }
 
 // --- Data Structures ---
@@ -322,6 +355,8 @@ pub enum ClientMessage {
     // --- CACHE MANAGEMENT ---
     InvalidateImageCache { keys: Vec<String> },
     GetCacheStats,
+    // Profile picture requests (for efficient loading)
+    GetUserAvatars { user_ids: Vec<Uuid> },
 }
 
 /// Pagination cursor for network protocol
@@ -393,6 +428,7 @@ pub enum ServerMessage {
         expired_entries: usize,
     },
     ImageCacheInvalidated { keys: Vec<String> },
+    UserAvatars { avatars: Vec<(Uuid, Option<String>)> }, // user_id, profile_pic
     // --- PERFORMANCE METRICS ---
     PerformanceMetrics {
         query_time_ms: u64,
