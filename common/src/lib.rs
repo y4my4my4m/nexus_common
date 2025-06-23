@@ -379,6 +379,7 @@ pub enum ServerMessage {
     NewChatMessage(ChatMessage),
     DirectMessage(DirectMessage),
     MentionNotification { from: User, content: String },
+    ForumReplyNotification { thread_id: Uuid, from_username: String, message: String, from_user_profile_pic: Option<String> },
     Notification(String, bool), // Message, is_error
     // Server invites
     ServerInviteReceived(ServerInvite),
