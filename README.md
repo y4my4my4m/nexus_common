@@ -1,8 +1,9 @@
 ![Screenshot_20250620_025053](https://github.com/user-attachments/assets/040cdaec-b141-4280-9b57-c8558770bf1d)
 
-https://github.com/y4my4my4m/cyberpunk_bbs_server
+https://github.com/user-attachments/assets/e5da9805-b2d2-41f9-9ca7-2ff42c719d15
 
-https://github.com/y4my4my4m/cyberpunk_bbs_client
+https://github.com/y4my4my4m/nexus_server
+https://github.com/y4my4my4m/nexus_client
 
 ---
 
@@ -11,6 +12,7 @@ https://github.com/y4my4my4m/cyberpunk_bbs_client
 ```bash
 cargo build -p client --release # for arch/manjaro (glibc)
 cargo build -p client --target x86_64-unknown-linux-musl --no-default-features --release # for void linux (musl)
+cargo build --release --manifest-path client/Cargo.toml --target x86_64-pc-windows-gnu  
 ```
 
 ```bash
