@@ -69,3 +69,15 @@ sudo chown youruser:youruser /home/youruser/gits/hobby/nexus/cert.pem /home/your
 cd /home/youruser/gits/hobby/nexus
 cargo run --release --bin server -- 0.0.0.0:443
 ```
+
+or
+
+```bash
+sudo certbot certonly --standalone -d nexus.cybershadow.ai
+```
+
+```bash
+sudo cp /etc/letsencrypt/live/nexus.cybershadow.ai/fullchain.pem ~/nexus/cert.pem
+sudo cp /etc/letsencrypt/live/nexus.cybershadow.ai/privkey.pem ~/nexus/key.pem
+sudo chown morale:morale ~/nexus/cert.pem ~/nexus/key.pem
+```
