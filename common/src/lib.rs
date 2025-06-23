@@ -167,6 +167,15 @@ pub struct Forum {
     pub threads: Vec<Thread>,
 }
 
+/// Lightweight forum structure for initial loading (no profile images)
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ForumLightweight {
+    pub id: Uuid,
+    pub name: String,
+    pub description: String,
+    pub threads: Vec<ThreadLightweight>,
+}
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Thread {
     pub id: Uuid,
@@ -176,10 +185,30 @@ pub struct Thread {
     pub timestamp: i64,
 }
 
+/// Lightweight thread structure for initial loading (no profile images)
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ThreadLightweight {
+    pub id: Uuid,
+    pub title: String,
+    pub author: UserInfo,
+    pub posts: Vec<PostLightweight>,
+    pub timestamp: i64,
+}
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Post {
     pub id: Uuid,
     pub author: User,
+    pub content: String,
+    pub timestamp: i64,
+    pub reply_to: Option<Uuid>,
+}
+
+/// Lightweight post structure for initial loading (no profile images)
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct PostLightweight {
+    pub id: Uuid,
+    pub author: UserInfo,
     pub content: String,
     pub timestamp: i64,
     pub reply_to: Option<Uuid>,
@@ -376,6 +405,7 @@ pub enum ServerMessage {
     AuthFailure(String),
     // General
     Forums(Vec<Forum>),
+    ForumsLightweight(Vec<ForumLightweight>), // Lightweight version without profile images
     NewChatMessage(ChatMessage),
     DirectMessage(DirectMessage),
     MentionNotification { from: User, content: String },
