@@ -112,7 +112,7 @@ impl Default for ServerConfig {
                 channel_creation_role: "Moderator".to_string(),
             },
             database: DatabaseConfig {
-                path: "cyberpunk_bbs.db".to_string(),
+                path: "nexus.db".to_string(),
                 backup_interval_hours: 6,
                 backup_retention_days: 30,
                 connection_pool_size: 10,
@@ -337,6 +337,6 @@ impl ClientConfig {
     /// Get config file path
     pub fn default_path() -> String {
         let home = std::env::var("HOME").unwrap_or_else(|_| ".".to_string());
-        format!("{}/.config/cyberpunk_bbs/client.toml", home)
+        format!("{}/.config/nexus/client.toml", home)
     }
 }

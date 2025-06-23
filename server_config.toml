@@ -37,7 +37,7 @@ message_length_limit = 2000
 channel_creation_role = "Moderator"
 
 [database]
-path = "cyberpunk_bbs.db"
+path = "nexus.db"
 backup_interval_hours = 6
 backup_retention_days = 30
 connection_pool_size = 10

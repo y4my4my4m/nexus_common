@@ -2451,6 +2451,7 @@ dependencies = [
  "chrono",
  "common",
  "futures",
+ "once_cell",
  "rand 0.9.1",
  "rand_core 0.6.4",
  "ratatui",
