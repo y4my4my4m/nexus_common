@@ -43,3 +43,29 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
   -addext "subjectAltName=DNS:localhost,IP:127.0.0.1" \
   -addext "basicConstraints=critical,CA:FALSE"
 ```
+
+## Server TLS script
+
+```bash
+#!/bin/bash
+set -e
+
+# 1. Install certbot if not present
+if ! command -v certbot &> /dev/null; then
+    echo "Installing certbot..."
+    sudo apt-get update
+    sudo apt-get install -y certbot
+fi
+
+# 2. Obtain a certificate (replace example.com with your domain)
+sudo certbot certonly --standalone -d example.com
+
+# 3. Copy/convert certs for your Rust server
+sudo cp /etc/letsencrypt/live/example.com/fullchain.pem /home/youruser/gits/hobby/nexus/cert.pem
+sudo cp /etc/letsencrypt/live/example.com/privkey.pem /home/youruser/gits/hobby/nexus/key.pem
+sudo chown youruser:youruser /home/youruser/gits/hobby/nexus/cert.pem /home/youruser/gits/hobby/nexus/key.pem
+
+# 4. Start your server (adjust path as needed)
+cd /home/youruser/gits/hobby/nexus
+cargo run --release --bin server -- 0.0.0.0:443
+```
