@@ -182,6 +182,7 @@ pub struct Post {
     pub author: User,
     pub content: String,
     pub timestamp: i64,
+    pub reply_to: Option<Uuid>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -308,6 +309,7 @@ pub enum ClientMessage {
     DeleteForum { forum_id: Uuid },
     CreateThread { forum_id: Uuid, title: String, content: String },
     CreatePost { thread_id: Uuid, content: String },
+    CreatePostReply { thread_id: Uuid, content: String, reply_to: Uuid }, // New: Reply to specific post
     // Chat
     SendDirectMessage { to: Uuid, content: String },
     SendChannelMessage { channel_id: Uuid, content: String },
@@ -458,6 +460,7 @@ pub fn create_initial_forums() -> Vec<Forum> {
                         author: system_user.clone(),
                         content: "I've been probing their new Aegis system. It's tough.".to_string(),
                         timestamp: 1633072800,
+                        reply_to: None, // No parent post
                     }],
                 },
             ],
