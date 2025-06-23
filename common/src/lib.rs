@@ -227,25 +227,18 @@ pub struct ChannelPermissions {
 pub struct ChannelMessage {
     pub id: Uuid,
     pub channel_id: Uuid,
-    pub sent_by: Uuid,
+    pub sent_by: Uuid, // This is the author ID - frontend will look up user info
     pub timestamp: i64,
     pub content: String,
-    // --- Added fields for author info ---
-    pub author_username: String,
-    pub author_color: UserColor,
-    pub author_profile_pic: Option<String>, // base64 or URL
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct DirectMessage {
     pub id: Uuid,
-    pub from: Uuid,
+    pub from: Uuid, // This is the author ID - frontend will look up user info
     pub to: Uuid,
     pub timestamp: i64,
     pub content: String,
-    pub author_username: String,
-    pub author_color: UserColor,
-    pub author_profile_pic: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
