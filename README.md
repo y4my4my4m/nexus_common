@@ -29,10 +29,10 @@ cargo run --release -p server
 
 ```bash
 # client
-./nexus-client-linux-arch 199.192.20.57:8080
+./nexus-client-linux-arch nexus.cybershadow.ai:8080
 
 # server
-cargo run --release -p server 0.0.0.0:8080
+cargo run --release -p server nexus.cybershadow.ai:8080
 ```
 
 ## Localhost TLS
