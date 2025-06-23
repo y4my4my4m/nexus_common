@@ -2,9 +2,15 @@
 
 https://github.com/user-attachments/assets/e5da9805-b2d2-41f9-9ca7-2ff42c719d15
 
+## How to run locally:
+
+Install the server and the client inside this repository:
+
 https://github.com/y4my4my4m/nexus_server
+`git clone git@github.com:y4my4my4m/nexus_server.git server`
 
 https://github.com/y4my4my4m/nexus_client
+`git clone git@github.com:y4my4my4m/nexus_client.git client`
 
 ---
 
