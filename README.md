@@ -12,6 +12,14 @@ Install the [Nexus SERVER](https://github.com/y4my4my4m/nexus_server) and the [N
 
 ---
 
+## Crates.io
+
+```bash
+cargo add nexus-tui-client # to use the client
+cargo add nexus-tui-server # to run a server instance
+cargo add nexus-tui-common # not needed to run as it's a dependency of the other two
+```
+
 ## Build
 
 ```bash
