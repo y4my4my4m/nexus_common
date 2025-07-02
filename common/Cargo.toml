@@ -1,7 +1,10 @@
 [package]
-name = "common"
+name = "nexus-tui-common"
 version = "0.1.0"
 edition = "2021"
+description = "Common types and utilities for the Nexus TUI client and server."
+authors = ["y4my4m"]
+license = "MIT"
 
 [features]
 default = ["ratatui"]
