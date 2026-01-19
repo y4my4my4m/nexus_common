@@ -94,5 +94,5 @@ sudo certbot certonly --standalone -d nexus.cybershadow.ai
 ```bash
 sudo cp /etc/letsencrypt/live/nexus.cybershadow.ai/fullchain.pem ~/nexus/cert.pem
 sudo cp /etc/letsencrypt/live/nexus.cybershadow.ai/privkey.pem ~/nexus/key.pem
-sudo chown morale:morale ~/nexus/cert.pem ~/nexus/key.pem
+sudo chown user:user ~/nexus/cert.pem ~/nexus/key.pem
 ```
