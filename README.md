@@ -6,9 +6,9 @@ https://github.com/user-attachments/assets/e5da9805-b2d2-41f9-9ca7-2ff42c719d15
 
 Install the [Nexus SERVER](https://github.com/y4my4my4m/nexus_server) and the [Nexus CLIENT](https://github.com/y4my4my4m/nexus_client) inside this repository:
 
-`git clone git@github.com:y4my4my4m/nexus_server.git server`
+`git clone git@github.com:y4my4my4m/nexus_server.git nexus-tui-server`
 
-`git clone git@github.com:y4my4my4m/nexus_client.git client`
+`git clone git@github.com:y4my4my4m/nexus_client.git nexus-tui-client`
 
 ---
 
@@ -23,21 +23,21 @@ cargo add nexus-tui-common # not needed to run as it's a dependency of the other
 ## Build
 
 ```bash
-cargo build -p client --release # for arch/manjaro (glibc)
-cargo build -p client --target x86_64-unknown-linux-musl --no-default-features --release # for void linux (musl)
+cargo build -p nexus-tui-client --release # for arch/manjaro (glibc)
+cargo build -p nexus-tui-client --target x86_64-unknown-linux-musl --no-default-features --release # for void linux (musl)
 cargo build --release --manifest-path client/Cargo.toml --target x86_64-pc-windows-gnu  
 ```
 
 ```bash
-cp target/release/client ./dist/nexus-client-linux-arch
+cp target/release/nexus-tui-client ./dist/nexus-client-linux-arch
 cp target/x86_64-unknown-linux-musl/release/client ./dist/nexus-client-linux-void
 ```
 
 ## Dev
 
 ```bash
-cargo run --release -p client
-cargo run --release -p server
+cargo run --release -p nexus-tui-client
+cargo run --release -p nexus-tui-server
 ```
 
 ## Run with remote server
@@ -47,7 +47,7 @@ cargo run --release -p server
 ./nexus-client-linux-arch nexus.cybershadow.ai:8080
 
 # server
-cargo run --release -p server nexus.cybershadow.ai:8080
+cargo run --release -p nexus-tui-server nexus.cybershadow.ai:8080
 ```
 
 ## Localhost TLS
